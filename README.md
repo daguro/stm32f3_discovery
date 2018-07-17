@@ -5,7 +5,7 @@ About this repo
 
 A common question on reddit subs is often one of how to get started in embedded systems.  My answer is often to start with the STM32F3 Disoovery board.  My reasoning is that it has some devices on it, namely accelerometer, gyroscope and magnetometer that can be programmed to generate data.  That way, the user gets to wrok on interrupt handlers and other subjects without requiring an additional board.
 
-While this sources here are targeted at the STM32F3 Discovery, many of the sources can be used for other chips and boards.
+While the sources here are targeted at the STM32F3 Discovery, many of the sources can be used for other chips and boards.
 
 Some of this material will be intended for people who are just starting with embedded systems, who know how to program but are unfamiliar with handling chips.  I hope that doesn't turn off people with a more advanced backtround
 
