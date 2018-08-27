@@ -25,7 +25,18 @@
 
 #include <stdint.h>
 
+/**
+ * do hexformating on an unsigned 32 bit quantity
+ */
+
 const static char *hexchar = "0123456789abcdef";
+
+/*
+ * args are value, number of bytes to format and a character buffer that is 
+ * at least 9 bytes long
+ *
+ * See CONSOLE_BUILD for usage
+ */
 
 char* format_x(uint32_t val, int len, char *output_buf)
 {

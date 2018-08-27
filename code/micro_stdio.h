@@ -31,6 +31,9 @@ extern int micro_putc(int cc);
 extern int micro_puts(char *ss);
 extern int micro_getc();
 extern char *micro_gets(char *ss, int nn);
+/*
+ * these are specific to the STM32 family
+ */
 extern void usart1_transmit_interrupt_enable();
 extern void usart1_receive_interrupt_enable();
 extern void usart1_irq_handler();
