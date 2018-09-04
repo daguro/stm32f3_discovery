@@ -1,4 +1,4 @@
-/*
+n/*
  * Copyright 2018 Daniel G. Robinson
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this
  * software and associated documentation files (the "Software"), to deal in the Software
@@ -424,6 +424,11 @@ void shell_clear_pass_to()						// end pass_to
 	pass_to_func = 0;
 }
 
+void shell_clear_bypass()						// end bypass function
+{
+	bypass_func = 0;
+}
+
 /*
  * called with input character
  *
@@ -454,7 +459,7 @@ int shell_process_input(char cc)
 		ret = (*pass_to_func)(byte_in);
 		return ret;
 	}
-
+n
 	// if buffer is empty and we get a q or Q
 	// NB: q can be part of a command or argument, just the the first letter
 	// on an empty command line
@@ -548,6 +553,8 @@ int shell_init(char *prompt_string)
 
 	INIT_LIST_HEAD(&cmd_list);
 
+	// set up the terminal to allow no character processing
+
 	shell_add_cmd(&cmd_help);
 	shell_add_cmd(&cmd_break);
 	shell_add_cmd(&cmd_quit);
@@ -561,6 +568,8 @@ int shell_exit()
 {
 #ifdef CONSOLE_BUILD
 
+	// restore the terminal
+
 	nocbreak();
 	noecho();
 	endwin();
@@ -570,6 +579,8 @@ int shell_exit()
 #else
 
 	PUTSS("resetting\r\n");
+
+	// for embeded system,
 	// put reset function here
 
 #endif /// CONSOLE_BUILD
