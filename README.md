@@ -1,6 +1,12 @@
 About this repo
 ==========================================================
 
+## NOTE BENE
+
+This is a work in progress.
+
+I have added some sources and am currently working on documenting all that I have uploaded, along with adding unit tests.
+
 ## Introduction
 
 A common question on reddit subs is often one of how to get started in embedded systems.  My answer is often to start with the STM32F3 Discovery board.  My reasoning is that it has some devices on it, namely accelerometer, gyroscope and magnetometer that can be programmed to generate data.  That way, the user gets to work on interrupt handlers and other subjects without requiring an additional board.
