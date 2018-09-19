@@ -574,7 +574,7 @@ int shell_exit()
 	noecho();
 	endwin();
 
-	PUTSS("exitting\r\n");
+	PUTSS("exiting\r\n");
 	exit(0);
 #else
 
