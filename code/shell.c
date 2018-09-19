@@ -1,4 +1,4 @@
-n/*
+/*
  * Copyright 2018 Daniel G. Robinson
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this
  * software and associated documentation files (the "Software"), to deal in the Software
@@ -317,7 +317,7 @@ static int convert_cmd_buf_to_substr(char *cmd_buf, int len, char *nargv[], int 
 	}
 
 	while(ss && *ss && char_count < len) {		// while there are chars in the buffer
-		if(ISALNUM(*ss)) {		// if it is alpha numeric
+		if(*ss == '#' || ISALNUM(*ss)) {		// if it is alpha numeric
 			if(!in_string) {	// if we are not in a substring
 				in_string = 1;	// toggledd
 				nargv[nargc] = ss;		// store the substring
@@ -438,7 +438,9 @@ void shell_clear_bypass()						// end bypass function
  * if it is a 'q', count three without a command and return -1
  *
  * return 1 if a prompt should be printed, else return 0
- *
+ *D
+
+
  * support bypassing this and handing input character to other
  * processing routine, e.g., memory probe
  */
@@ -459,7 +461,7 @@ int shell_process_input(char cc)
 		ret = (*pass_to_func)(byte_in);
 		return ret;
 	}
-n
+
 	// if buffer is empty and we get a q or Q
 	// NB: q can be part of a command or argument, just the the first letter
 	// on an empty command line
@@ -493,7 +495,12 @@ n
 			cargc = convert_cmd_buf_to_substr(cmdline_buf, buffer_len, cargv, CMD_BUF_NARGS);
 
 			if(cargc) {
-				if((cmd = shell_find_cmd(cargv[0])) != 0) {
+
+				if(cargv[0][0] == '#') {
+					// treat '#' as a commment
+					return 1;
+				}
+				else if((cmd = shell_find_cmd(cargv[0])) != 0) {
 					int (*func)(int argc, char *argv[]);
 
 					if(cargc < cmd->sc_min || cargc > cmd->sc_max) {

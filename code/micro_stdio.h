@@ -28,7 +28,7 @@
 
 extern int _write (int fd, const void *buf, int count);
 extern int micro_putc(int cc);
-extern int micro_puts(char *ss);
+extern int micro_puts(const char *ss);
 extern int micro_getc();
 extern char *micro_gets(char *ss, int nn);
 /*
