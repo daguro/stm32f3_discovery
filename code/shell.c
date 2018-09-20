@@ -549,11 +549,17 @@ void shell_print_prompt()
 #include <curses.h>
 #endif // CONSOLE_BUILD
 
+/*
+ * shell_init() initializes the cmd_list.
+ *
+ * THIS MUST BE DONE ONCE.
+ */
+
 int shell_init(char *prompt_string)
 {
 #ifdef CONSOLE_BUILD
 
-	initscr();
+	initscr();			// these three calls allow for raw tty input
 	noecho();
 	cbreak();
 
@@ -577,9 +583,8 @@ int shell_exit()
 {
 #ifdef CONSOLE_BUILD
 
-	// restore the terminal
 
-	nocbreak();
+	nocbreak();		 // restore the terminal
 	noecho();
 	endwin();
 
