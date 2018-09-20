@@ -38,8 +38,7 @@ Into main.c, add the following:
     #include "dbt.h"
 
 2) Into the main while(1) loop, at USER CODE BEGIN 3, add:
-
-
+~~~
     int done = 0;
     int shell_arg = 1;
 
@@ -64,7 +63,7 @@ Into main.c, add the following:
     }
 
     shell_exit();
-
+~~~
 Into stm32f3xx\_it.c, in USART1\_IRQHandler, at USER CODE BEGIN USART1\_IRQn 1, add:
 
     extern usart1_irq_handler();
