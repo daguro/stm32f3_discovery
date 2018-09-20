@@ -9,28 +9,27 @@ This project allows the user to query the I2C registers in the processor and the
 
 Create a directory to hold the code and the eclipse workspace.  I use the following layout:
 
-		I2C/i2c
-		I2C/wkspc
+    I2C/i2c
+    I2C/wkspc
 
-	Open the project file (\*.ioc) with STM32CubeMX and save (File -> Save Project As) it to I2C/i2c.  When you are ready, generate code (Project -> Generate Code).  Code should be added to I2C/i2c.  In I2C/i2c, you should see Drivers, Inc, Src, and startup directories.
+Open the project file (\*.ioc) with STM32CubeMX and save (File -> Save Project As) it to I2C/i2c.  When you are ready, generate code (Project -> Generate Code).  Code should be added to I2C/i2c.  In I2C/i2c, you should see Drivers, Inc, Src, and startup directories.
 
-	You will need to add code to two of these directories.  In Inc, do symbolic links to the repo:
+You will need to add code to two of these directories.  In Inc, do symbolic links to the repo:
 
-		for ii in dbt.h probe.h micro_console.h micro_types.h micro_util.h console.h micro_stdio.h list.h shell.h byte_fifo.h format.h mem_db.h ; do ln -s PATH_TO_YOUR_REPO/$ii ; done
+    for ii in dbt.h probe.h micro_console.h micro_types.h micro_util.h console.h micro_stdio.h list.h shell.h byte_fifo.h format.h mem_db.h ; do ln -s PATH_TO_YOUR_REPO/$ii ; done
 
-	Into Src, add the following:
+Into Src, add the following:
 
-		for ii in spi_reg.c dbt.c probe.c lsm303_driver.c i2c_reg.c byte_fifo.c micro_stdio.c shell.c format.c mem_db.c micro_util.c ; do ln -s  PATH_TO_YOUR_REPO/$ii ; done
+    for ii in spi_reg.c dbt.c probe.c lsm303_driver.c i2c_reg.c byte_fifo.c micro_stdio.c shell.c format.c mem_db.c micro_util.c ; do ln -s  PATH_TO_YOUR_REPO/$ii ; done
 
-	Some code needs to be added to files:
+Some code needs to be added to files:
 
-	Into main.c, add the following:
+Into main.c, add the following:
 
-	1) Into the space allowed for USER CODE BEGIN Includes, add:
+1) Into the space allowed for USER CODE BEGIN Includes, add:
 
-		#include "shell.h"
-
-		#include "console.h"
+    #include "shell.h"
+    #include "console.h"
 
     #include "micro_console.h"
     #include "mem_db.h"
