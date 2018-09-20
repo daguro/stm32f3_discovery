@@ -67,8 +67,8 @@ Into main.c, add the following:
 
 Into stm32f3xx\_it.c, in USART1\_IRQHandler, at USER CODE BEGIN USART1\_IRQn 1, add:
 
-    extern usart1\_irq\_handler();
-    usart1\_irq\_handler();
+    extern usart1_irq_handler();
+    usart1_irq_handler();
 
 ## SW4ST
 
