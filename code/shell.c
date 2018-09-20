@@ -317,7 +317,7 @@ static int convert_cmd_buf_to_substr(char *cmd_buf, int len, char *nargv[], int 
 	}
 
 	while(ss && *ss && char_count < len) {		// while there are chars in the buffer
-		if(*ss == '#' || ISALNUM(*ss)) {		// if it is alpha numeric
+		if(*ss == '_' || *ss == '#' || ISALNUM(*ss)) {		// if it is alpha numeric
 			if(!in_string) {	// if we are not in a substring
 				in_string = 1;	// toggledd
 				nargv[nargc] = ss;		// store the substring
@@ -473,13 +473,15 @@ int shell_process_input(char cc)
 		q_count++;
 
 		if(q_count == 1) {
-			PUTSS("that's 1, exit on 2 more\n\r");
+			PUTSS("q : that's 1, exit on 2 more\n\r");
+			return 1;
 		}
 		if(q_count == 2) {
-			PUTSS("that's 2, exit on 1 more\n\r");
+			PUTSS("q : that's 2, exit on 1 more\n\r");
+			return 1;
 		}
 		if(q_count == 3) {
-			PUTSS("that's 3, exiting\n\r");
+			PUTSS("q : that's 3, exiting\n\r");
 			return -1;
 		}
 	}
