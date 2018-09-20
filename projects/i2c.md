@@ -29,36 +29,61 @@ Into main.c, add the following:
 1) Into the space allowed for USER CODE BEGIN Includes, add:
 
 	#include "shell.h"
+
 	#include "console.h"
+
 	#include "micro_console.h"
+
 	#include "mem_db.h"
+
 	#include "byte_fifo.h"
+
 	#include "micro_stdio.h"
+
 	#include "dbt.h"
 
 2) Into the main while(1) loop, at USER CODE BEGIN 3, add:
 
 
 	int done = 0;
+
 	int shell_arg = 1;
 
+
+
 	shell_init("\r\nSTM32F3 :> ");
+
 	mem_db_init();
+
 	extern void lsm303_driver_init();
+
 	lsm303_driver_init();
+
 	extern void i2c_reg_init();
+
 	i2c_reg_init();
+
 	extern void spi_reg_init();
+
 	spi_reg_init();
+
 	extern void dbt_cmd_init();
+
 	dbt_cmd_init();
 
+
 	while(!done) {
+
 		shell_arg = shell_func(shell_arg);
+
 		if(shell_arg < 0) {
+
 			done = 1;
+
 		}
+
 	}
+
 	
 	shell_exit();
 
