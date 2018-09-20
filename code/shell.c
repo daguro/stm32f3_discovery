@@ -589,6 +589,8 @@ int shell_exit()
 
 	PUTSS("resetting\r\n");
 
+	PUTSS("reset not implemented, you'll need to hit the switch\r\n");
+
 	// for embeded system,
 	// put reset function here
 
