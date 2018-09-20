@@ -168,6 +168,8 @@ int mem_db_cmd_loop(int sargc, char *sargv[])
 		PUTSS("need either read or write\r\n");
 		return 1;				// print prompt
 	}
+
+	return 1;		// make the c compiler happy
 }
 
 Shell_cmd cmd_loop = {

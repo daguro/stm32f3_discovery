@@ -534,7 +534,7 @@ int shell_process_input(char cc)
 	return 0;
 }
 
-char *shell_prompt_string = 0;;
+char *shell_prompt_string = 0;
 
 void shell_print_prompt()
 {

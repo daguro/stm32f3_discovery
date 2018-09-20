@@ -40,8 +40,15 @@
 #define I2C_ACC_ADDR		(0x32)
 #define I2C_MAG_ADDR		(0x3c)
 
+// return values from STM32 HAL
+
 static char *hal_code[] = {"ok", "error", "busy", "timeout"};
+
+// the LSM303 contains both accelerometer and magnetometer
+
 static char *dev_name[] = {"acc", "mag"};
+
+// perform a low level write to LSM303
 
 uint16_t lsm303_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t* data) 
 {
@@ -52,6 +59,8 @@ uint16_t lsm303_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t* data)
 	return (uint16_t) ret;
 }
 
+// perform a low level read from LSM303
+
 uint16_t lsm303_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t* data) 
 {
 	int ret;
@@ -61,13 +70,19 @@ uint16_t lsm303_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t* data)
 	return (uint16_t) ret;
 }
 
+// initialize the accelerometer
+
 void lsm303_acc_init(/* lsm303acc__InitTypeDef *lsm303_InitStruct*/) 
 {
 }
 
+// issue a reboot command to the accelerometer
+
 void lsm303_acc_reboot_cmd(/* void*/) 
 {
 }
+
+// various filter commands, etc
 
 void lsm303_acc_filter_config(/* lsm303acc__FilterConfigTypeDef *lsm303_FilterStruct*/)  
 {
@@ -106,6 +121,8 @@ uint8_t lsm303_acc_get_data_status(/* void*/)
 	return 0;
 }
 
+// initialize the magnetometer
+
 void lsm303_mag_init(/* lsm303Mag_InitTypeDef *lsm303_InitStruct*/) 
 {
 }
@@ -124,17 +141,7 @@ uint32_t lsm303_timeout_user_callback(/* void*/)
 	return 0;
 }
 
-/*
- * this routine catchs characters interactively until a period, '.' or 'q'
- *
- * this routine is passed to shell via shell_set_pass_to_func()
- *
- * a '+' increments the address and prints the value
- * a '-' decrments the address and prints the value
- * a <CR. or <LF> doesn't change the address, but causes the memory
- * location to be read again
- * a '.' ends the probe function
- */
+// some arrays to map register names to register numbers
 
 typedef struct _reg_name_num {
 	char *rnn_name;
@@ -270,37 +277,41 @@ static const uint8_t acc_sensor_num[6] = {
 	LSM_ACC_OUT_XH, LSM_ACC_OUT_XL,
 	LSM_ACC_OUT_YH, LSM_ACC_OUT_YL,
 	LSM_ACC_OUT_ZH, LSM_ACC_OUT_ZL,
-}
+};
 
 static const uint8_t mag_sensor_num[6] = {
 	LSM_MAG_OUT_XH, LSM_MAG_OUT_XL,
 	LSM_MAG_OUT_YH, LSM_MAG_OUT_YL,
 	LSM_MAG_OUT_ZH, LSM_MAG_OUT_ZL,
-}
+};
 
-static Type64 get_sensor_values(uint8_t dev)
+static uint64_t get_sensor_values(uint8_t dev)
 {
 	int ret;
-	Type64 ret_val;
 	uint8_t *reg_num_ptr;
+	Type64 ret_val;
 	int ii;
 
 	ret_val.u64 = 0;
-	interim_val = 0;
 
 	if(dev == I2C_ACC_ADDR)
 		reg_num_ptr = &acc_sensor_num[0];
 	else if(dev == I2C_MAG_ADDR)
 		reg_num_ptr = &mag_sensor_num[0];
-	else
-		return (Type64) -1;
+	else {
+		ret_val.s64 = -1;
+		return ret_val.u64;
+	}
 
 	for(ii = 0; ii < 6; ii++) {
 		ret = lsm303_read(dev, reg_num_ptr[ii], &ret_val.u8[5-ii]); 
-		if(ret != 0) return (Type64) -1;
+		if(ret != 0) {
+			ret_val.s64 = -1;
+			return ret_val.u64;
+		}
 	}
 
-	return ret_val;
+	return ret_val.u64;
 }
 
 static void lsm303_probe_print_prompt()
@@ -310,6 +321,9 @@ static void lsm303_probe_print_prompt()
 	PUTSS(lsm303_probe_dev_name);
 	PUTSS(" :> ");
 }
+
+// we have read the register, print the value
+// ret is returned by HAL, see messages above
 				
 int lsm303_print_reg_val(uint16_t ret, Reg_name_num *reg_ptr, int ii, uint8_t val, int lf)
 {
@@ -322,6 +336,7 @@ int lsm303_print_reg_val(uint16_t ret, Reg_name_num *reg_ptr, int ii, uint8_t va
 		if(lf) PUTSS(newline);
 		else PUTCC(' ');
 	}
+	// error messages
 	else if(ret >= 1 && ret <= 3) {
 		PUTSS("HAL returns ");
 		PUTSS(hal_code[ret]);
@@ -339,6 +354,23 @@ int lsm303_print_reg_val(uint16_t ret, Reg_name_num *reg_ptr, int ii, uint8_t va
 	return 0;
 }
 
+/*
+ * this routine catchs characters interactively until a period, '.' or 'q'
+ *
+ * this routine is passed to shell via shell_set_pass_to_func()
+ *
+ * a '+' increments the address and prints the value
+ * a '-' decrements the address and prints the value
+ * a '.' ends the probe function
+ *
+ * hex chars can be input and written to the current probe location
+ * on a <CR> or <LF>
+ *
+ * a <CR. or <LF> on an empty line doesn't change the address, but causes the memory
+ * location to be read again
+ *	
+ */
+
 static int lsm303_probe_pass_to_func(char cc)
 {
 	static int getting_value = 0;		// acts as a count of characters
@@ -346,29 +378,28 @@ static int lsm303_probe_pass_to_func(char cc)
 	uint16_t ret;
 
 	switch(cc) {
-	case '+':
+	case '+':				// increment the current location
 		PUTCC('+');
 		lsm303_probe_index++;
 		if(lsm303_probe_index >= lsm303_probe_reg_len)
-			lsm303_probe_index = 0;
+			lsm303_probe_index = 0;		// wrap around
 		break;
-	case '-':
+	case '-':				// decrement the current location
 		PUTCC('-');
 		lsm303_probe_index--;
 		if(lsm303_probe_index < 0)
-			lsm303_probe_index = lsm303_probe_reg_len-1;
+			lsm303_probe_index = lsm303_probe_reg_len-1;	// wrap around
 		break;
 	case '\n':
 	case '\r':
 		if(getting_value) {
-			getting_value = 0;
 			PUTCC(' ');
 
 			ret = lsm303_write(lsm303_probe_dev_num,
 					lsm303_probe_reg_ptr[lsm303_probe_index].rnn_num, &set_value) ;
 
-			set_value = 0;
-			getting_value = 0;
+			set_value = 0;			// clear these
+			getting_value = 0;		// for the next entry
 		}
 		break;
 
@@ -386,21 +417,23 @@ static int lsm303_probe_pass_to_func(char cc)
 			PUTCC('\b');
 			getting_value--;
 			set_value >>= 4;
-			if(getting_value == 0) set_value = 0;
+
+			if(getting_value == 0)	// last hex digit?
+				set_value = 0;		// clear out
 		}
 		break;
 
 	case '0': case '1': case '2': case '3': case '4':
 	case '5': case '6': case '7': case '8': case '9':
 		PUTCC(cc);
-		getting_value++;
+		getting_value++;			// count of hex digits
 		set_value <<= 4;
 		set_value |= (cc - '0');
 		break;
 			
 	case 'a': case 'b': case 'c': case 'd': case 'e': case 'f': 
 		PUTCC(cc);
-		getting_value++;
+		getting_value++;			// count of hex digits
 		set_value <<= 4;
 		set_value |= (cc - 'a' + 10);
 		break;
@@ -410,7 +443,7 @@ static int lsm303_probe_pass_to_func(char cc)
 		getting_value = 0;
 		break;
 	} 
-	if(getting_value == 0) {
+	if(getting_value == 0) {		// print the value at the current location
 		uint16_t ret;
 		PUTSS(newline);
 		lsm303_probe_print_prompt();
@@ -426,6 +459,7 @@ static int lsm303_probe_pass_to_func(char cc)
  * lsm acc|mag|0x32|0x3c r|read reg_addr | all
  * lsm acc|mag|0x32|0x3c w|write reg_addr val
  * lsm acc|mag|0x32|0x3c p|probe
+ * lsm acc|mag|0x32|0x3c d|display
  */
 
 
@@ -440,6 +474,9 @@ int lsm303_cmd_access(int sargc, char *sargv[])
 	int reg_len;
 	int ii;
 
+	// the device is a combination accelterometer and magnetometer
+	// which is it?
+
 	dev = (uint8_t) STRTOL(sargv[1]);			// is it a number?
 
 	if(dev != 0x32 && dev != 0x3c) {			// no, try a string
@@ -450,6 +487,8 @@ int lsm303_cmd_access(int sargc, char *sargv[])
 			dev = I2C_MAG_ADDR;
 		}
 	}
+
+	// note we catch the errors here.
 
 	if(dev == 0x32) {
 		reg_ptr = acc_reg;
@@ -464,13 +503,17 @@ int lsm303_cmd_access(int sargc, char *sargv[])
 		goto lsm303_cmd_access_exit;
 	}
 
-	if(*sargv[2] == 'p') {			// probe
+	// sub command, probe, display, read or write
+
+	if(*sargv[2] == 'p') {			// probe: 
 
 		lsm303_probe_reg_ptr = reg_ptr;
 		lsm303_probe_reg_len = reg_len;
 		lsm303_probe_dev_num = dev;
 		lsm303_probe_dev_name = (dev == I2C_ACC_ADDR) ? dev_name[0] : dev_name[1];
 		lsm303_probe_index = 0;
+
+		// in probe, we set the pass_to function and get input here directly
 
 		if(shell_set_pass_to(lsm303_probe_pass_to_func) == 0) {
 			PUTSS(newline);
@@ -484,9 +527,10 @@ int lsm303_cmd_access(int sargc, char *sargv[])
 			return 1;
 		}
 	}
+
 	if(*sargv[2] == 'd') {			// display
 		uint32_t count;
-		uint8_t sensor_values[6];
+		Type64 sensor_values;
 		if(sargc == 4) count = STRTOL(sargv[3]);
 		else count = 100;			// for now, need to make a bypass_func
 		PUTSS(newline);
@@ -494,16 +538,14 @@ int lsm303_cmd_access(int sargc, char *sargv[])
 		for(ii = 0; ii < count; ii++) {
 			uint16_t* print_sens_val;
 
-			get_sensor_values(dev, sensor_values);
+			sensor_values.u64 = get_sensor_values(dev);
 
-			print_sens_val = (uint16_t*) sensor_values;
-
-			PTUSS("x: ");
-			PUTSS(format_x((uint32_t) *print_sens_val++, 4, obuf));
-			PTUSS(", y: ");
-			PUTSS(format_x((uint32_t) *print_sens_val++, 4, obuf));
-			PTUSS(", z: ");
-			PUTSS(format_x((uint32_t) *print_sens_val++, 4, obuf));
+			PUTSS("x: ");
+			PUTSS(format_x((uint32_t) sensor_values.u16[0], 4, obuf));
+			PUTSS(", y: ");
+			PUTSS(format_x((uint32_t) sensor_values.u16[1], 4, obuf));
+			PUTSS(", z: ");
+			PUTSS(format_x((uint32_t) sensor_values.u16[1], 4, obuf));
 			PUTSS(newline);
 		}
 	}
