@@ -27,16 +27,15 @@ Some code needs to be added to files:
 Into main.c, add the following:
 
 1) Into the space allowed for USER CODE BEGIN Includes, add:
-
+~~~
     #include "shell.h"
     #include "console.h"
-
     #include "micro_console.h"
     #include "mem_db.h"
     #include "byte_fifo.h"
     #include "micro_stdio.h"
     #include "dbt.h"
-
+~~~
 2) Into the main while(1) loop, at USER CODE BEGIN 3, add:
 ~~~
     int done = 0;
