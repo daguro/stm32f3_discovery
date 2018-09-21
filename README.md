@@ -25,7 +25,7 @@ For exmaple, the file shell.c can be compiled into a stand alone program which d
 
 On the target hardware, it looks like this:
 
-![file//doc/images/help_dump_probe.png "showing help, dump and probe"]
+![screenshot](file:///doc/images/help_dump_probe.png "showing help, dump and probe")
 
 ## Getting started
 
