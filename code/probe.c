@@ -44,7 +44,7 @@ static int probe_proc(char cc)
 		break;
 	case '-':
 		PUTCC('-');
-		probe_pf->pf_increment();
+		probe_pf->pf_decrement();
 		break;
 	case '\n':
 	case '\r':
