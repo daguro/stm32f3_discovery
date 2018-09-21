@@ -49,6 +49,8 @@ The third command run is the probe command.  The probe command is pointed at a r
 
 Three quits in a row causes the system to be reset.
 
+Current code size is around 8kbytes of app code and 8 kbytes of system code.
+
 ## Getting started
 
 The files in the ./doc directory are a series of tasks to lead a programmer through setting up a board.  The tasks are titled with some number of digits and a name.  The digits start at 00 and are a guide for working through the material.
