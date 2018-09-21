@@ -288,7 +288,7 @@ static const uint8_t mag_sensor_num[6] = {
 static uint64_t get_sensor_values(uint8_t dev)
 {
 	int ret;
-	uint8_t *reg_num_ptr;
+	const uint8_t *reg_num_ptr;
 	Type64 ret_val;
 	int ii;
 
@@ -316,7 +316,6 @@ static uint64_t get_sensor_values(uint8_t dev)
 
 static void lsm303_probe_print_prompt()
 {
-	char obuf[9];
 	PUTSS("lsm303 ");
 	PUTSS(lsm303_probe_dev_name);
 	PUTSS(" :> ");
@@ -470,7 +469,7 @@ int lsm303_cmd_access(int sargc, char *sargv[])
 	uint16_t ret;
 	int count;
 	char *lsm303_err_str;
-	Reg_name_num *reg_ptr;
+	const Reg_name_num *reg_ptr;
 	int reg_len;
 	int ii;
 
@@ -479,7 +478,7 @@ int lsm303_cmd_access(int sargc, char *sargv[])
 
 	dev = (uint8_t) STRTOL(sargv[1]);			// is it a number?
 
-	if(dev != I3C_ACC_ADDR && dev != I2C_MAG_ADDR) {			// no, try a string
+	if(dev != I2C_ACC_ADDR && dev != I2C_MAG_ADDR) {			// no, try a string
 		if(strcmp(sargv[1], "acc") == 0) {
 			dev = I2C_ACC_ADDR;
 		}
@@ -536,8 +535,6 @@ int lsm303_cmd_access(int sargc, char *sargv[])
 		PUTSS(newline);
 
 		for(ii = 0; ii < count; ii++) {
-			uint16_t* print_sens_val;
-
 			sensor_values.u64 = get_sensor_values(dev);
 
 			PUTSS("x: ");
