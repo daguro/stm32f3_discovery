@@ -500,7 +500,7 @@ int shell_process_input(char cc)
 
 				if(cargv[0][0] == '#') {
 					// treat '#' as a commment
-					return 1;
+					ret = 1;
 				}
 				else if((cmd = shell_find_cmd(cargv[0])) != 0) {
 					int (*func)(int argc, char *argv[]);
