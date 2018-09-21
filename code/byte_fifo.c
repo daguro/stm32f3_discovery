@@ -89,7 +89,7 @@ uint8_t bf_read(Byte_fifo *bf)
 }
 
 
-#ifdef CONSOLE_BUILD
+#ifdef SA_CONSOLE_BUILD
 
 #include <stdio.h>
 #include <string.h>
@@ -105,8 +105,10 @@ uint8_t bf_read(Byte_fifo *bf)
 uint8_t buf[FIFO_SIZE];
 
 Byte_fifo bfifo = {
-	&buf[0],
-	0, 0, FIFO_SIZE,
+	&buf[0],		// bf_fifo
+	0,				// bf_head
+	0,				// bf_tail
+	FIFO_SIZE,		// bf_count
 };
 
 pthread_t read_thread, write_thread, cmdproc_thread;
@@ -287,4 +289,4 @@ read_didnt_launch:
 	exit(0);
 }
 
-#endif // CONSOLE_BUILD
+#endif // SA_CONSOLE_BUILD

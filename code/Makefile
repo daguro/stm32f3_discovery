@@ -42,8 +42,8 @@ console_apps: console/shell console/dbt console/byte_fifo console/i2c_reg consol
 console/shell: shell.c format.o
 	gcc -g -Wall shell.c format.o -o console/shell -lcurses -DCONSOLE_BUILD -DSA_CONSOLE_BUILD
 
-console/byte_fifo: byte_fifo.o shell.o format.o
-	gcc -g -Wall byte_fifo.o shell.o format.o -lpthread -o console/byte_fifo -lcurses -DCONSOLE_BUILD
+console/byte_fifo: byte_fifo.c shell.o format.o
+	gcc -g -Wall byte_fifo.c shell.o format.o -lpthread -o console/byte_fifo -lcurses -DSA_CONSOLE_BUILD
 
 console/dbt: dbt.c shell.o format.o
 	gcc -g -Wall dbt.c shell.o format.o -o console/dbt -lcurses -DCONSOLE_BUILD
@@ -68,9 +68,6 @@ shell.o: shell.c
 
 micro_console.o: micro_console.c
 	gcc -g -Wall -c micro_console.c
-
-byte_fifo.o: byte_fifo.c
-	gcc -g -Wall -c byte_fifo.c -DCONSOLE_BUILD
 
 probe.o: probe.c
 	gcc -g -Wall -c probe.c -DCONSOLE_BUILD

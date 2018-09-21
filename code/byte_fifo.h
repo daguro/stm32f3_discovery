@@ -40,8 +40,8 @@
 
 typedef struct _byte_fifo {
 	uint8_t *bf_buf;
-	uint16_t bf_head;
-	uint16_t bf_tail;
+	uint16_t bf_head;		// index of head
+	uint16_t bf_tail;		// index of tail
 	uint16_t bf_count;		// size of buf
 } Byte_fifo;
 
