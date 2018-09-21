@@ -23,6 +23,10 @@ Some of the source files are set up so that they can be built on a Linux system 
 
 For exmaple, the file shell.c can be compiled into a stand alone program which demonstrates a shell function.  The file mem_debug.c can be compiled, using the routines in shell.c, to form a stand alone program which demonstrates memory dumping, probing and looping.
 
+On the target hardware, it looks like this:
+
+![file//doc/images/help_dump_probe.png "showing help, dump and probe"]
+
 ## Getting started
 
 The files in the ./doc directory are a series of tasks to lead a programmer through setting up a board.  The tasks are titled with some number of digits and a name.  The digits start at 00 and are a guide for working through the material.
