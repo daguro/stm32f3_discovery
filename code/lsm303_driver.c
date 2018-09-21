@@ -479,7 +479,7 @@ int lsm303_cmd_access(int sargc, char *sargv[])
 
 	dev = (uint8_t) STRTOL(sargv[1]);			// is it a number?
 
-	if(dev != 0x32 && dev != 0x3c) {			// no, try a string
+	if(dev != I3C_ACC_ADDR && dev != I2C_MAG_ADDR) {			// no, try a string
 		if(strcmp(sargv[1], "acc") == 0) {
 			dev = I2C_ACC_ADDR;
 		}
@@ -490,11 +490,11 @@ int lsm303_cmd_access(int sargc, char *sargv[])
 
 	// note we catch the errors here.
 
-	if(dev == 0x32) {
+	if(dev == I2C_ACC_ADDR) {
 		reg_ptr = acc_reg;
 		reg_len = NUM_ACC_REGS;
 	}
-	else if(dev == 0x3c) {
+	else if(dev == I2C_MAG_ADDR) {
 		reg_ptr = mag_reg;
 		reg_len = NUM_MAG_REGS;
 	}
