@@ -257,7 +257,9 @@ int dbt_cmd_init()
 }
 
 
-#ifdef CONSOLE_BUILD
+#ifdef SA_CONSOLE_BUILD
+
+#include <stdio.h>
 
 int main(int argc, char *argv[])
 {
@@ -325,5 +327,5 @@ int main(int argc, char *argv[])
 
 }
 
-#endif // CONSOLE_BUILD
+#endif // SA_CONSOLE_BUILD
 

@@ -27,6 +27,19 @@
 #define _MICRO_TYPES_H_
 
 typedef union {
+	uint64_t u64[2];
+	int64_t s64[2];
+	double d64[2];
+	float f32[4];
+	uint32_t u32[4];
+	int32_t s32[4];
+	uint16_t u16[8];
+	int16_t s16[8];
+	uint8_t u8[16];
+	int8_t c8[16];
+} Type128;
+
+typedef union {
 	int64_t s64;
 	double d64;
 	uint64_t u64;

@@ -28,42 +28,7 @@
 #define _DBT_H_
 
 #include <stdint.h>
-
-typedef union {
-	uint64_t u64[2];
-	int64_t s64[2];
-	double d64[2];
-	float f32[4];
-	uint32_t u32[4];
-	int32_t s32[4];
-	uint16_t u16[8];
-	int16_t s16[8];
-	uint8_t u8[16];
-	int8_t c8[16];
-} Type128;
-
-typedef union {
-	uint64_t u64;
-	int64_t s64;
-	double d64;
-	float f32[2];
-	uint32_t u32[2];
-	int32_t s32[2];
-	uint16_t u16[4];
-	int16_t s16[4];
-	uint8_t u8[8];
-	int8_t c8[8];
-} Type64;
-
-typedef union {
-    float f32;
-    uint32_t u32;
-    int32_t s32;
-    uint16_t u16[2];
-    int16_t s16[2];
-    uint8_t u8[8];
-    int8_t c8[4];
-} Type32;
+#include "micro_types.h"
 
 typedef Type128 DBT_log_entry;
 

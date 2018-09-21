@@ -34,7 +34,11 @@ console:
 console_apps: console/shell console/dbt console/byte_fifo console/i2c_reg console/mem_db
 
 #
-# CONSOLE_BUILD is the common flag for building the console programs
+# CONSOLE_BUILD is the common flag for building the console programs.  It is used to make
+# 	object files for inclusion into other programs
+# 	This flag is a switch that controls inclusion of libc routines and Linux I/O or the
+# 		embedded alternative.  See console.h
+#
 # SA_CONSOLE_BUILD is used for the shell program when building the stand alone shell program
 # shell.o is included into other console programs.
 #
@@ -46,7 +50,7 @@ console/byte_fifo: byte_fifo.c shell.o format.o
 	gcc -g -Wall byte_fifo.c shell.o format.o -lpthread -o console/byte_fifo -lcurses -DSA_CONSOLE_BUILD
 
 console/dbt: dbt.c shell.o format.o
-	gcc -g -Wall dbt.c shell.o format.o -o console/dbt -lcurses -DCONSOLE_BUILD
+	gcc -g -Wall dbt.c shell.o format.o -o console/dbt -lcurses -DSA_CONSOLE_BUILD -DCONSOLE_BUILD
 
 console/spi_reg: spi_reg.c shell.o format.o probe.o
 	gcc -g -Wall spi_reg.c shell.o format.o probe.o -o console/spi_reg -lcurses -DCONSOLE_BUILD
