@@ -26,6 +26,13 @@
 #include <stdint.h>
 #include <console.h>
 
+/*
+ * a simple command to encode the system memory map.
+ *
+ * Make it as complex as you need, eg, add peripheral addresses, etc. if that iw 
+ * what you want at the console
+ */
+
 void mem_print_map()
 {
 	PUTSS("STM32F303VCTx memory map:\n\r");
