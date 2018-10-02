@@ -182,6 +182,34 @@ Shell_cmd cmd_loop = {
 	.sc_max = 6,
 };
 
+int mem_db_map(int sargc, char *sargv[])
+{
+	PUTSS("MCU memory map\r\n");
+	extern void mem_print_map();
+
+	mem_print_map();
+
+	return 1;
+}
+
+void mem_print_map_alias()
+{
+	PUTSS("valid for embedded platforms\n\r");
+}
+
+void mem_print_map() __attribute__((weak, alias("mem_print_map_alias")));
+
+Shell_cmd cmd_map = {
+	.list = {0, 0},
+	.sc_name = "map",
+	.sc_abrev = "map",
+	.sc_help = "map :  print MCU memory map",
+	.sc_func = mem_db_map,
+	.sc_min = 1,
+	.sc_max = 1,
+};
+
+
 /*
  * dump addr len_in_bytes [size]
  */
@@ -420,6 +448,7 @@ void mem_db_init()
 	shell_add_cmd(&cmd_dump);
 	shell_add_cmd(&cmd_probe);
 	shell_add_cmd(&cmd_loop);
+	shell_add_cmd(& cmd_map);
 	// add commands to shell
 }
 
