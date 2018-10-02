@@ -5,6 +5,12 @@ I2C project
 
 This project allows the user to query the I2C registers in the processor and then query the LSM303 chip containing the accelerometer and magnetometer.
 
+Here is an example:
+
+![screenshot](../doc/images/i2c_probe.png "showing probe of i2c registers, LSM303 registers")
+
+This shows a probe of the i2c controller registers, using + and - to navigate.  Then, i2c is used to communicate with the LSM303 to probe the accelerometer and magnetometer registers.
+
 ## Using this project
 
 Create a directory to hold the code and the eclipse workspace.  I use the following layout:

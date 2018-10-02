@@ -43,7 +43,7 @@ Note also that memory sizes can be specified for all accesses.  It is not shown 
 
 The first command run is help.
 
-The second command run is dump nad it shows memory dump as 32 bit entities and as bytes.
+The second command run is dump and it shows memory dump as 32 bit entities and as bytes.
 
 The third command run is the probe command.  The probe command is pointed at a region of SRAM not used by the program.  The + key increments the address, the - key decrements it.  Hitting the carriage-return causes the location to be read again.  A period or q ends the probe.  This paradigm is used for register accesses in the MPU devices and attached devices.
 
@@ -54,6 +54,8 @@ Current code size is around 8kbytes of app code and 8 kbytes of system code.
 ## Getting started
 
 The files in the ./doc directory are a series of tasks to lead a programmer through setting up a board.  The tasks are titled with some number of digits and a name.  The digits start at 00 and are a guide for working through the material.
+
+For now, the ./projects directory has a project, i2c, and a some documentation about it, i2c.md.
 
 ## License
 
