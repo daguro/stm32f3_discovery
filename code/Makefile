@@ -31,7 +31,8 @@ console_build: console console_apps
 console:
 	mkdir console
 	
-console_apps: console/shell console/dbt console/byte_fifo console/i2c_reg console/mem_db
+console_apps: console/shell console/dbt console/byte_fifo console/i2c_reg console/mem_db \
+	console/format
 
 #
 # CONSOLE_BUILD is the common flag for building the console programs.  It is used to make
@@ -61,6 +62,9 @@ console/i2c_reg: i2c_reg.c shell.o format.o probe.o
 console/mem_db: mem_db.o shell.o format.o probe.o
 	gcc -g -Wall mem_db.o shell.o format.o probe.o -o console/mem_db -lcurses
 
+console/format: format.c
+	gcc -g -Wall format.c -o console/format -DCONSOLE_BUILD
+
 micro_util: micro_util.c
 	gcc -g -Wall micro_util.c -o micro_util -DCONSOLE_BUILD
 
@@ -81,9 +85,6 @@ format.o: format.c
 
 micro_stdio.o: micro_stdio.c
 	gcc -g -Wall -c micro_stdio.c -DCONSOLE_BUILD
-
-format: format.c
-	gcc -g -Wall format.c -o format -DCONSOLE_BUILD
 
 clean:
 	rm *.o

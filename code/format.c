@@ -54,6 +54,53 @@ char* format_x(uint32_t val, int len, char *output_buf)
 	return &ss[8 - ii];
 }
 
+/*
+ * decimal format an integer for output
+ *
+ * responsibility of caller to make sure output_buf is large enough
+ * 	to hold output
+ */
+
+char* format_d(int32_t val, char *output_buf)
+{
+	char *ss;
+	int32_t power;
+
+	ss = output_buf;
+
+	if(val == 0) {
+		*ss++ = '0';
+		*ss = 0;
+		return output_buf;
+	}
+
+	if(val < 0) {
+		val = -val;
+		*ss++ = '-';
+	}
+
+	power = 1;
+
+	while((power * 10) < val) power *= 10;
+
+	do {
+		int32_t digit;
+		int32_t remain;
+
+		digit = val / power;
+		remain = val % power;
+
+		*ss++ = '0' + digit;
+
+		power /= 10;
+		val = remain;
+	} while(power > 0);
+
+	*ss = 0;
+
+	return output_buf;
+}
+
 #ifdef CONSOLE_BUILD
 #include <stdio.h>
 #include <stdlib.h>
@@ -66,14 +113,22 @@ int main(int argc, char *argv[])
 	val = 0xdeadbeef;
 
 
-	printf("%s\n", format_x(val, 5, buf));
+	printf("last five of 0x%08x, %s\n", val, format_x(val, 5, buf));
 
 	val = 0xcafedead;
 	
-	printf("%s\n", format_x(val, 5, buf));
+	printf("last five of 0x%08x, %s\n", val, format_x(val, 5, buf));
 
 	val = 0xcafe;
 	
-	printf("%s\n", format_x(val, 8, buf));
+	printf("eight of 0x%08x, %s\n", val, format_x(val, 8, buf));
+
+	val = 3003;
+
+	printf("%d: %s\n", val, format_d(val, buf));
+
+	val = -9123;
+
+	printf("%d: %s\n", val, format_d(val, buf));
 }
 #endif

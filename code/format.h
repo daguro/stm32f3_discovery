@@ -24,3 +24,4 @@
  */
 
 extern char* format_x(uint32_t val, int len, char *output_buf);
+extern char *format_d(int32_t val, char *output_buf);
