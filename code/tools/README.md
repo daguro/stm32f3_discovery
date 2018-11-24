@@ -28,6 +28,8 @@ special and specialx - these blocks are for one-off requests
 The block type is part of the signature that is part of the block.  All block essential parts ofELF file are copied out into a binary image file.  A host based program called 'program\_signer' pads the image file to the flash page boundary, minus the size of the signature block, and appends the signature block.  The resulting binary file is then a multiple of the flash page size.  The signed binary image file is used to generate an SREC file that can be loaded over any serial channel.
 
 The signature block is shown below.
+
+```
 	typedef struct \_flash\_block\_sig\_v1 {
 	uint32\_t fbs\_version;
 	uint32\_t fbs\_length;
@@ -41,6 +43,7 @@ The signature block is shown below.
 	uint16\_t fbs\_cksum;
 	uint16\_t fbs\_prog\_bits;
 	} Flash\_block\_sig\_v1;
+```
 
 This signature block is at the end of the page, with the last 32 bit word of the page holding the checksum for the signature block and the progression bits used to indicate validity.  The word before that contains the magic number, a 32 bit encoding of the block type.  These are the block types:
 
