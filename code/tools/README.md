@@ -59,15 +59,17 @@ The signature block is found in the flash by looking at this location, which is 
 
 Note that the progression bits are not protected by the checksum for the signature block.  One characteristic of flash memory is that once it is erased to all ones, it can only be changed to zeros.  The bits indicate the current state of the block.  The bits when cleared are defined thus:
 
-bit 00 : programmed into flash, block checksum checked, flash signature checksum checked
+	bit 00 : programmed into flash, block checksum checked, flash signature checksum checked
 
-bit 01 : going active, in the process of switching from BK[1|2]a to BK[1|2]xb
+	bit 01 : going active, in the process of switching from BK[1|2]a to BK[1|2]xb
 
-bit 02 : is active 
+	bit 02 : is active 
 
-bit 03 : going inactive
+	bit 03 : going inactive
 
-bit 04 : is inactive
+	bit 04 : is inactive
+
+	bit 05 - 0f : not used currently
 
 As these bits are in each signature block, it is possible for the loading block, e.g., block0, to detect that a switch was in the process of taking place and recover a application update.
 
