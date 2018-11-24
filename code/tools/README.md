@@ -30,19 +30,19 @@ The block type is part of the signature that is part of the block.  All block es
 The signature block is shown below.
 
 ```
-	typedef struct \_flash\_block\_sig\_v1 {
-		uint32\_t fbs\_version;
-		uint32\_t fbs\_length;
-		uint32\_t fbs\_block\_cksum;
-		uint32\_t fbs\_load\_addr;
-		uint32\_t fbs\_entry\_point;
+	typedef struct _flash_block_sig_v1 {
+		uint32_t fbs_version;
+		uint32_t fbs_length;
+		uint32_t fbs_block_cksum;
+		uint32_t fbs_load_addr;
+		uint32_t fbs_entry_point;
 		/* everything after this is common to all FSB */
-		uint16\_t fbs\_flags;
-		uint16\_t fbs\_fbs\_version;
-		uint32\_t fbs\_magic\_num;
-		uint16\_t fbs\_cksum;
-		uint16\_t fbs\_prog\_bits;
-	} Flash\_block\_sig\_v1;
+		uint16_t fbs_flags;
+		uint16_t fbs_fbs_version;
+		uint32_t fbs_magic_num;
+		uint16_t fbs_cksum;
+		uint16_t fbs_prog_bits;
+	} Flash_block_sig_v1;
 ```
 
 This signature block is at the end of the page, with the last 32 bit word of the page holding the checksum for the signature block and the progression bits used to indicate validity.  The word before that contains the magic number, a 32 bit encoding of the block type.  These are the block types:
@@ -86,18 +86,18 @@ Version 1 of the flash signature block is 32 bytes in length.  The block should 
 The reset code will set up the clock tree, perhaps initialize some resources, then call the block0\_func code with a context.  The block0\_func code is written to be platform agnostic.  The context passed to the block0\_func contains the functions necessary to perform certain functions and is shown below:
 
 ```
-	typedef struct \_block0\_ctx\_v1 {
-		char* bc\_flash\_base\_addr;
-		uint32\_t bc\_flash\_size;
-		uint32\_t bc\_flash\_block\_size;
-		int bc\_comm\_putc(char cc);
-		int bc\_comm\_getc();
-		int bc\_gpio\_func(int val);
-		int bc\_blockN\_activate\_func(char* addr\_a, char* addr\_b);	
-		int bc\_flash\_page\_erase\_func(char *addr);       
-		int bc\_flash\_page\_prog\_func(char *addr, char *data);   
-		int bc\_report\_error(uint32\_t val);
-	} Block0\_ctx\_v1;
+	typedef struct _block0_ctx_v1 {
+		char* bc_flash_base_addr;
+		uint32_t bc_flash_size;
+		uint32_t bc_flash_block_size;
+		int bc_comm_putc(char cc);
+		int bc_comm_getc();
+		int bc_gpio_func(int val);
+		int bc_blockN_activate_func(char* addr_a, char* addr_b);	
+		int bc_flash_page_erase_func(char *addr);       
+		int bc_flash_page_prog_func(char *addr, char *data);   
+		int bc_report_error(uint32_t val);
+	} Block0_ctx_v1;
 ```
 
 There are some constants, e.g., the address of the base of flash memory, the size of the flash memory and the size of a single flash page.  Some chips have different flash erase block sizes available.  For this version, we are using just one.  There are pointers to routines to send and receive data, a function to wiggle GPIO pins, perhaps connected to LEDs for signalling, a pointer to a function that will manipulate the progression bits, pointers to functions to erase a page and program it and a pointer to a function to report errors.
