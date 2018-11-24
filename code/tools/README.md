@@ -83,7 +83,7 @@ Version 1 of the flash signature block is 32 bytes in length.  The block should 
 
 ## block0
 
-The reset code will set up the clock tree, perhaps initialize some resources, then call the block0\_func code with a context.  The block0\_func code is written to be platform agnostic.  The context passed to the block0\_func contains the functions necessary to perform certain functions and is shown below:
+The reset code will set up the clock tree, perhaps initialize some resources, then call the block0\_func() code with a context.  The block0\_func() code is written to be platform agnostic.  The context passed to the block0\_func() contains the functions necessary to perform certain functions and is shown below:
 
 ```
 	typedef struct _block0_ctx_v1 {
@@ -108,7 +108,7 @@ The block0\_func() scans memory, looking for magic numbers.  When it finds a blo
 
 If the block0\_func() can not find a loadable image that satisfies requirements for checksums, hashes, progression bits, etc., it will pass the context to a recovery routine.  The recovery routine will implement a rudimentary monitor which can load a new application block, program it to memory and reset.  The monitor may have the ability to inspect and display memory for diagnostic reasons.  It will not have drivers for all devices on board.
 
-During the flash memory scan, the block0\_func will find the block0 flash signature block and perform a validity check.  If the validity check fails, as a matter of policy, the recovery may be launched.  The validity of block0 is stored for possible later inspection.
+During the flash memory scan, the block0\_func() will find the block0 flash signature block and perform a validity check.  If the validity check fails, as a matter of policy, the recovery may be launched.  The validity of block0 is stored for possible later inspection.
 
 ## block1, etc.
 
