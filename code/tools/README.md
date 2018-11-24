@@ -71,6 +71,19 @@ Note that the progression bits are not protected by the checksum for the signatu
 
 	bit 05 - 0f : not used currently
 
+The sequence of bit writes to change from BK1b to BK1a would be:
+
+	BK1a -> going active
+
+	BK1b -> going inactive
+
+	BK1a -> is active
+
+	BK1b -> is inactive
+
+These would be performed by the update code in BK1b.  It would erase pages at the BK1a address, download the code, program the pages, check the checksum / hash of the executable, check the checksum of the flash signature block and clear bit 0.  The interrupts would be turned off, the bit sequencing would be performed and the chip would be reset.  The new code in BK1a would be picked up by block0, loaded and executed.
+
+
 As these bits are in each signature block, it is possible for the loading block, e.g., block0, to detect that a switch was in the process of taking place and recover a application update.
 
 The other bits can be used for indicating things like an image that is intended to be run once and then marked as inactive.  This happens when trying to debug something in situ and error condition only happening under certain circumstances.  In this case, a special version of the application can be created and the other progress bits can be used to control the booting and loading sequence.
