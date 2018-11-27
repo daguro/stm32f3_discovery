@@ -361,6 +361,10 @@ int main(int argc, char *argv[])
 		usage(errno, 0);
 	}
 
+	/*
+	 * read in the file, fill rest of block with 0xff
+	 */
+
 	if(read(in_fd, file_buf, fileinfo.st_size) != fileinfo.st_size) {
 		perror("reading input file");
 		if(out_fd != DEFAULT_OUTPUT_FD) close(out_fd);
@@ -374,8 +378,12 @@ int main(int argc, char *argv[])
 		file_buf[ii] = 0xff;
 	}
 
-	Flash_block_sig_v1 fbs, *fbs_ptr;
+	/*
+	 * fill out the flash block signature.  install it at the end of the block
+	 * we are going to write
+	 */
 
+	Flash_block_sig_v1 fbs, *fbs_ptr;
 
 	fbs.fbs_magic_num = magic_number;
 	fbs.fbs_length = (uint32_t) fileinfo.st_size;
@@ -391,14 +399,13 @@ int main(int argc, char *argv[])
 	fbs_ptr--;
 	*fbs_ptr = fbs;
 	
-	Type32 pversion;
+	Type32 pversion;	// make it trivial to write out the dot notation
 
 	pversion.u32 = version;
 
 	fprintf(stderr, "processing %s:\n\tmagic number: 0x%08x, version: %d.%d.%d.%d\n\tblock size: %d, length: %ld\n\tentry point: %08x, load address: %08x\n",
 		file_name, magic_number, pversion.u8[0], pversion.u8[1], pversion.u8[2],
 		pversion.u8[3], flash_block_size, fileinfo.st_size, entry_point, load_addr);
-
 
 	if((write(out_fd, file_buf, mem_to_get) != mem_to_get)) {
 		perror("writing output file");
@@ -407,6 +414,10 @@ int main(int argc, char *argv[])
 	}
 
 	free(file_buf);
+
+	/*
+	 * do file padding if needed
+	 */
 
 	if(pad_blocks > 0) {
 		uint8_t *buf;
